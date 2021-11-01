@@ -15,9 +15,8 @@ import java.util.UUID;
 @Data
 public class Device {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Type(type = "uuid-binary")
+    @GeneratedValue(generator = "uuid4")
+    @GenericGenerator(name = "uuid4", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @Column(name = "description", nullable = false)
@@ -32,4 +31,9 @@ public class Device {
     @Column(name = "average_energy_consumption", nullable = false)
     private Double averageEnergyConsumption;
 
+    @OneToOne
+    private Sensor sensor;
+
+    @ManyToOne
+    private Client client;
 }

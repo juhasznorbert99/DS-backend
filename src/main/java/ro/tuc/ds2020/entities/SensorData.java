@@ -27,6 +27,6 @@ public class SensorData {
     private Double energyConsumption;
 
     @ManyToOne
-    @JoinColumn(name="sensor_id", nullable=false)
     private Sensor sensor;
+
 }

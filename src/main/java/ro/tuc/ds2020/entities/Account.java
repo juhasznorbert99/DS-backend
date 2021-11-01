@@ -19,7 +19,6 @@ public class Account {
     @Id
     @GeneratedValue(generator = "uuid4")
     @GenericGenerator(name = "uuid4", strategy = "org.hibernate.id.UUIDGenerator")
-    @Type(type = "uuid-binary")
     private UUID id;
 
     @Column(name = "name", nullable = false)
@@ -30,9 +29,6 @@ public class Account {
 
     @Column(name = "birthDay", nullable = false)
     private Date birthDay;
-
-    @OneToOne(mappedBy = "account")
-    private Client client;
 
     public Account(String name, String address, Date birthDay){
         this.name=name;

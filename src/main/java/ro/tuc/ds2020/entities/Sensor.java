@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,16 +22,7 @@ public class Sensor {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "address", nullable = false)
-    private String address;
-
     @Column(name = "maximum_value", nullable = false)
     private Double maximumValue;
-
-    @OneToMany
-    private List<Device> devices;
-
-    @OneToMany
-    private List<SensorData> datas;
 
 }

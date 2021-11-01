@@ -20,5 +20,4 @@ public class UserDTO{
     private Date birthDay;
     private String token;
     private String role;
-
 }

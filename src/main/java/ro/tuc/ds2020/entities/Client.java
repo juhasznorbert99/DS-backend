@@ -20,7 +20,6 @@ public class Client{
     @Id
     @GeneratedValue(generator = "uuid4")
     @GenericGenerator(name = "uuid4", strategy = "org.hibernate.id.UUIDGenerator")
-    @Type(type = "uuid-binary")
     private UUID id;
 
     @Column(name = "username", nullable = false)
@@ -35,11 +34,7 @@ public class Client{
     @Column(name = "role", nullable = false)
     private String role;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @OneToOne()
     private Account account;
-
-    @OneToMany
-    private List<Device> devices;
 
 }
