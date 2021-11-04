@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/device")
 public class DeviceController {
     private final DeviceService deviceService;
@@ -28,12 +28,7 @@ public class DeviceController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Device> detDevice(@PathVariable("id") UUID id){
-        List<Device> devices = deviceService.findAll();
-        for(Device i: devices){
-            if(i.getId().equals(id))
-                return new ResponseEntity<>(i, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(deviceService.findDevice(id), HttpStatus.OK);
     }
 
     @PostMapping("/create")

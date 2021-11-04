@@ -2,6 +2,8 @@ package ro.tuc.ds2020.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ro.tuc.ds2020.dtos.LoginDTO;
 import ro.tuc.ds2020.dtos.UserDTO;
@@ -111,6 +113,26 @@ public class ClientService {
         for(UserDTO i: dtos){
             if(i.getPassword().equals(userDTO.getPassword())
             &&i.getUsername().equals(userDTO.getUsername()))
+                return i;
+        }
+        return null;
+    }
+
+    public List<UserDTO> findUserDTOs() {
+        List<Client> clients = clientRepository.findAll();
+        List<Account> accounts = accountRepository.findAll();
+        UserBuilder ub = new UserBuilder();
+        List<UserDTO> dtos = ub.toUserDTOs(clients,accounts);
+        return dtos;
+    }
+
+    public UserDTO findUserDTO(UUID clientID) {
+        List<Client> clients = clientRepository.findAll();
+        List<Account> accounts = accountRepository.findAll();
+        UserBuilder ub = new UserBuilder();
+        List<UserDTO> dtos = ub.toUserDTOs(clients,accounts);
+        for(UserDTO i: dtos){
+            if(i.getId().equals(clientID))
                 return i;
         }
         return null;

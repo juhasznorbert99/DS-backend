@@ -1,4 +1,11 @@
 package ro.tuc.ds2020.repositories;
 
-public interface SensorDataRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ro.tuc.ds2020.entities.SensorData;
+
+import java.util.UUID;
+
+@Repository
+public interface SensorDataRepository extends JpaRepository<SensorData, UUID> {
 }

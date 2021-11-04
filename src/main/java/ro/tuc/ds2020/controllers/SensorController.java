@@ -32,12 +32,7 @@ public class SensorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Sensor> getSensor(@PathVariable("id") UUID sensorID){
-        List<Sensor> sensors = sensorService.findAll();
-        for(Sensor i: sensors){
-            if(i.getId().equals(sensorID))
-                return new ResponseEntity<>(i,HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(sensorService.findSensor(sensorID), HttpStatus.OK);
     }
 
     @PostMapping("/create")

@@ -2,6 +2,7 @@ package ro.tuc.ds2020.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ro.tuc.ds2020.entities.Device;
@@ -35,5 +36,14 @@ public class DeviceService {
     public void update(UUID deviceID, Device device) {
         device.setId(deviceID);
         deviceRepository.save(device);
+    }
+
+    public Device findDevice(UUID id) {
+        List<Device> devices = deviceRepository.findAll();
+        for(Device i: devices){
+            if(i.getId().equals(id))
+                return i;
+        }
+        return null;
     }
 }

@@ -30,24 +30,12 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<List<UserDTO>> getClients(){
-        List<Client> clients = clientService.findAll();
-        List<Account> accounts = accountService.findAll();
-        UserBuilder ub = new UserBuilder();
-        List<UserDTO> dtos = ub.toUserDTOs(clients,accounts);
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+        return new ResponseEntity<>(clientService.findUserDTOs(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getClient(@PathVariable("id") UUID clientID){
-        List<Client> clients = clientService.findAll();
-        List<Account> accounts = accountService.findAll();
-        UserBuilder ub = new UserBuilder();
-        List<UserDTO> dtos = ub.toUserDTOs(clients,accounts);
-        for(UserDTO i: dtos){
-            if(i.getId().equals(clientID))
-                return new ResponseEntity<>(i, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(clientService.findUserDTO(clientID), HttpStatus.OK);
     }
 
     @PostMapping("/create")

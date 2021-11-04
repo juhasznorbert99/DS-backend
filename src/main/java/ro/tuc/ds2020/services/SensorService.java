@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ro.tuc.ds2020.entities.*;
+import ro.tuc.ds2020.repositories.SensorDataRepository;
 import ro.tuc.ds2020.repositories.SensorRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,9 +16,11 @@ public class SensorService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientService.class);
 
     private final SensorRepository sensorRepository;
+    private final SensorDataRepository sensorDataRepository;
 
-    public SensorService(SensorRepository sensorRepository) {
+    public SensorService(SensorRepository sensorRepository, SensorDataRepository sensorDataRepository) {
         this.sensorRepository = sensorRepository;
+        this.sensorDataRepository = sensorDataRepository;
     }
 
     public List<Sensor> findAll(){
@@ -39,11 +41,26 @@ public class SensorService {
     }
 
     public void delete(UUID sensorID) {
+        List<SensorData> sensorDataList = sensorDataRepository.findAll();
+        for(SensorData i: sensorDataList){
+            if(i.getSensor().getId().equals(sensorID)){
+                sensorDataRepository.deleteById(i.getId());
+            }
+        }
         sensorRepository.deleteById(sensorID);
     }
 
     public void update(UUID sensorID, Sensor sensor) {
         sensor.setId(sensorID);
         sensorRepository.save(sensor);
+    }
+
+    public Sensor findSensor(UUID sensorID) {
+        List<Sensor> sensors = sensorRepository.findAll();
+        for(Sensor i: sensors){
+            if(i.getId().equals(sensorID))
+                return i;
+        }
+        return null;
     }
 }
