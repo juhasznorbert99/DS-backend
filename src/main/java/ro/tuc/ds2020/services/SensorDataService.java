@@ -1,9 +1,11 @@
 package ro.tuc.ds2020.services;
 
 import org.springframework.stereotype.Service;
+import ro.tuc.ds2020.dtos.SensorDataDTO;
 import ro.tuc.ds2020.entities.Sensor;
 import ro.tuc.ds2020.entities.SensorData;
 import ro.tuc.ds2020.repositories.SensorDataRepository;
+import ro.tuc.ds2020.repositories.SensorRepository;
 
 import java.util.*;
 
@@ -11,9 +13,11 @@ import java.util.*;
 public class SensorDataService {
 
     private final SensorDataRepository sensorDataRepository;
+    private final SensorRepository sensorRepository;
 
-    public SensorDataService(SensorDataRepository sensorDataRepository) {
+    public SensorDataService(SensorDataRepository sensorDataRepository, SensorRepository sensorRepository) {
         this.sensorDataRepository = sensorDataRepository;
+        this.sensorRepository = sensorRepository;
     }
 
     public List<SensorData> findAll() {
@@ -29,8 +33,14 @@ public class SensorDataService {
         return null;
     }
 
-    public UUID insert(SensorData sensorData) {
+    public UUID insert(SensorDataDTO sensorDataDTO) {
+        SensorData sensorData = new SensorData();
         sensorData.setTimestamp(new Date());
+        sensorData.setEnergyConsumption(sensorDataDTO.getEnergyConsumption());
+
+        Sensor sensor = sensorRepository.findById(sensorDataDTO.getSensor_id()).get();
+        sensorData.setSensor(sensor);
+
         SensorData insertedSensorData = sensorDataRepository.save(sensorData);
         return insertedSensorData.getId();
     }

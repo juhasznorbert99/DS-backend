@@ -3,6 +3,7 @@ package ro.tuc.ds2020.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.tuc.ds2020.dtos.SensorDataDTO;
 import ro.tuc.ds2020.entities.SensorData;
 import ro.tuc.ds2020.services.SensorDataService;
 
@@ -30,10 +31,13 @@ public class SensorDataController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UUID> createSensorData(@RequestBody SensorData sensorData){
+    public ResponseEntity<UUID> createSensorData(@RequestBody SensorDataDTO sensorData){
         UUID sensorDataID = sensorDataService.insert(sensorData);
+        System.out.println(sensorData);
         return new ResponseEntity<>(sensorDataID, HttpStatus.CREATED);
     }
+
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<UUID> deleteSensorData(@PathVariable("id") UUID sensorDataID){
