@@ -6,12 +6,10 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import ro.tuc.ds2020.dtos.SensorDataDTO;
-import ro.tuc.ds2020.repositories.SensorDataRepository;
 import ro.tuc.ds2020.services.SensorDataService;
 
 import java.util.UUID;
@@ -25,7 +23,6 @@ public class Reciever {
     public Reciever(SensorDataService sensorDataService) {
         this.sensorDataService = sensorDataService;
     }
-
 
     @Bean
     public void receiveMessage() throws Exception{
@@ -60,7 +57,7 @@ public class Reciever {
                 sensorDataDTO.setEnergyConsumption(Double.valueOf(String.valueOf(jsonObject.get("energyConsumption"))));
                 System.out.println(sensorDataDTO);
                 sensorDataService.insert(sensorDataDTO);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

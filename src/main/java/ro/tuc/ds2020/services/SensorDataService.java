@@ -1,9 +1,14 @@
 package ro.tuc.ds2020.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import ro.tuc.ds2020.dtos.SensorDataDTO;
+import ro.tuc.ds2020.entities.Client;
+import ro.tuc.ds2020.entities.Device;
 import ro.tuc.ds2020.entities.Sensor;
 import ro.tuc.ds2020.entities.SensorData;
+import ro.tuc.ds2020.repositories.DeviceRepository;
 import ro.tuc.ds2020.repositories.SensorDataRepository;
 import ro.tuc.ds2020.repositories.SensorRepository;
 
@@ -14,10 +19,14 @@ public class SensorDataService {
 
     private final SensorDataRepository sensorDataRepository;
     private final SensorRepository sensorRepository;
+    private final DeviceRepository deviceRepository;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
-    public SensorDataService(SensorDataRepository sensorDataRepository, SensorRepository sensorRepository) {
+    public SensorDataService(SensorDataRepository sensorDataRepository, SensorRepository sensorRepository, DeviceRepository deviceRepository) {
         this.sensorDataRepository = sensorDataRepository;
         this.sensorRepository = sensorRepository;
+        this.deviceRepository = deviceRepository;
     }
 
     public List<SensorData> findAll() {
@@ -40,6 +49,40 @@ public class SensorDataService {
 
         Sensor sensor = sensorRepository.findById(sensorDataDTO.getSensor_id()).get();
         sensorData.setSensor(sensor);
+
+        List<SensorData> sensorDataList = sensorDataRepository.findAll();
+        SensorData lastSensorData = new SensorData();
+        //sensorData.value-sensorData.value / sensorData.time-sensorData.time >= sensor.maxValue
+
+        if(sensorDataList.size()>0)
+            for(int i=sensorDataList.size()-1;i>=0;i--){
+                if(sensorDataList.get(i).getSensor().getId().equals(sensor.getId())){
+                    lastSensorData = sensorDataList.get(i);
+                    break;
+                }
+            }
+        else
+            lastSensorData = null;
+        //get client bases on the sensor
+        List<Device> devices = deviceRepository.findAll();
+        Client client = new Client();
+        for (Device i:
+             devices) {
+            if(i.getSensor().getId().equals(sensor.getId())){
+                client = i.getClient();
+                break;
+            }
+        }
+
+        if(sensorDataList.size()>0){
+            if(     (sensorData.getEnergyConsumption() - lastSensorData.getEnergyConsumption()) /
+                    ((sensorData.getTimestamp().getTime() - lastSensorData.getTimestamp().getTime()) / (60.0*60.0*1000.0))
+                    >= sensor.getMaximumValue()
+            ){
+                //to webSocket
+                simpMessagingTemplate.convertAndSend("/topic/client/"+client.getId(), "s-a trimis valoarea mai mare la clientul " + client.getUsername());
+            }
+        }
 
         SensorData insertedSensorData = sensorDataRepository.save(sensorData);
         return insertedSensorData.getId();

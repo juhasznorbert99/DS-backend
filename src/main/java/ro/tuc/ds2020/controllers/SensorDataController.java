@@ -37,8 +37,6 @@ public class SensorDataController {
         return new ResponseEntity<>(sensorDataID, HttpStatus.CREATED);
     }
 
-
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<UUID> deleteSensorData(@PathVariable("id") UUID sensorDataID){
         sensorDataService.delete(sensorDataID);
