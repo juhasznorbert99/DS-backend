@@ -32,9 +32,6 @@ public class Reciever {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setUri(uri);
 
-        //Recommended settings
-        factory.setConnectionTimeout(30000);
-
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 

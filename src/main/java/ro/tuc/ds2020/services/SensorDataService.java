@@ -53,7 +53,6 @@ public class SensorDataService {
         List<SensorData> sensorDataList = sensorDataRepository.findAll();
         SensorData lastSensorData = new SensorData();
         //sensorData.value-sensorData.value / sensorData.time-sensorData.time >= sensor.maxValue
-
         if(sensorDataList.size()>0)
             for(int i=sensorDataList.size()-1;i>=0;i--){
                 if(sensorDataList.get(i).getSensor().getId().equals(sensor.getId())){
@@ -73,7 +72,7 @@ public class SensorDataService {
                 break;
             }
         }
-
+        if(lastSensorData.getId()!=null)
         if(sensorDataList.size()>0){
             if(     (sensorData.getEnergyConsumption() - lastSensorData.getEnergyConsumption()) /
                     ((sensorData.getTimestamp().getTime() - lastSensorData.getTimestamp().getTime()) / (60.0*60.0*1000.0))
